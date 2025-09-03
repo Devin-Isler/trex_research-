@@ -200,6 +200,58 @@ Açılımı **Model View Controller** olan **MVC**, işleri oldukça kolaylaşt�
 ### Middleware
 Middleware, bir web uygulamasında gelen HTTP isteğinin uygulamaya ulaşmadan önce ve yanıt oluşturulurken uygulamadan çıkmadan önce ara katmanlarda işlenmesini sağlayan bir yazılım parçasıdır. Her middleware, isteği inceleyip değiştirebilir, ek işlemler yapabilir veya isteğin devam edip etmeyeceğine karar verebilir.  
 Middleware sırası işlem mantığına göre dikkatlice belirlenir: örneğin hata yakalama en üstte olmalı ki tüm zincirdeki hataları yakalayabilsin, authentication yetkilendirmeden önce gelmeli ki kullanıcı doğrulaması yapılabilsin, statik dosya middleware’i genellikle en başta olmalı ki basit dosya istekleri hızla işlenebilsin. Sıralama yanlış olursa middleware’lerin işlevleri doğru çalışmayabilir veya gereksiz yere performans kaybı oluşabilir.
+```powershell
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Services konfigürasyonu
+builder.Services.AddControllers();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer();
+builder.Services.AddAuthorization();
+
+var app = builder.Build();
+
+// ⚠️ ÖNEMLİ: Middleware sırası çok kritik!
+
+// 1. Exception Handling - En üstte olmalı (tüm hataları yakalar)
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts(); // HTTP Strict Transport Security
+}
+
+// 2. HTTPS Redirection - Güvenlik için erken olmalı
+app.UseHttpsRedirection();
+
+// 3. Static Files - Basit dosya isteklerini erken yakalasın
+app.UseStaticFiles();
+
+// 4. Routing - URL eşleştirme
+app.UseRouting();
+
+// 5. CORS - Cross-origin istekler için (eğer gerekiyorsa)
+// app.UseCors();
+
+// 6. Authentication - Kullanıcı kimliği doğrulama
+app.UseAuthentication();
+
+// 7. Authorization - Yetkilendirme (Authentication'dan SONRA)
+app.UseAuthorization();
+
+// 8. Custom Middleware (eğer varsa)
+app.UseMiddleware<RequestLoggingMiddleware>();
+
+// 9. Endpoints - Son olarak controller'lara yönlendirme
+app.MapControllers();
+
+app.Run();
+```
 ### Dependency Injection
 Dependency Injection, bir sınıfın ihtiyaç duyduğu bağımlılıkların (services, repository, logger vb.) sınıfın içinde kendisi tarafından oluşturulması yerine dışarıdan verilmesi prensibidir. Sınıflar sıkı sıkıya birbirine bağlı olmadıklarından test edilebilirliği yüksektir. Farklı implemantasyonlar kolaylıkla uygulanabilir.  
 ```powershell
@@ -365,6 +417,7 @@ ASP.NET Core’da logging, uygulamanın çalışma süresince oluşan olayların
 İkisi beraber çalışarak hatayı yakalayıp kayıt altına alır.
 
 - ASP.NET Core’da hata yönetimi, uygulamadaki tüm hataları tek bir yerde yakalayarak hem loglamak hem de kullanıcıya güvenli bir mesaj göstermek için yapılır. Bunun için UseExceptionHandler() kullanılır; bu middleware, hata oluştuğunda isteği belirlenen bir endpoint’e yönlendirir. Bu endpoint içinde ILogger ile hatanın detayları kaydedilir ve kullanıcıya teknik detay içermeyen bir hata mesajı döner. Böylece uygulama çökmez ve hatalar izlenebilir, ve düzeltilmeye çalışılır.
+
 
  ---
 
