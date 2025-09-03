@@ -4,7 +4,7 @@
 ### Git
 Git, dağıtık bir versiyon kontrol sistemidir. Yazılım projelerinde veya dosya yönetiminde yapılan değişiklikleri kaydedip, takip etip ve yöneterek versiyon kontrolünü kolaylaştırır.
 ### GitHub
-Github, Git versiyon kontrol sistemini kullanan projeler için bir bulut tabanlı platformdur. Git projeleri saklamak, paylaşmak ve ekip halinde yönetmek için kullanılan bir internet platformudur.
+Github, Git versiyon kontrol sistemini kullanan projeler için bir bulut tabanlı platformdur. Git projeleri saklamak, paylaşmak ve ekip halinde yönetmek için kullanılan bir internet platformudur. Kodların paylaşıldığı bir sosyal medya platformu gibidir.
 ### Temel Git Komutları
 - `git init` → Yeni bir repo başlatır.
 - `git clone` → Mevcut bir projeyi klonlayıp yerel bilgisayarına indirir.
@@ -48,7 +48,7 @@ Yazılımcılar SDLC’de özellikle **kodlama, test ve bakım aşamalarında ak
 
 ## 2. .NET Ekosistemi
 ### .NET nedir?
-.NET, Microsoft tarafından geliştirilmiş bir yazılım geliştirme platformudur. Geliştiricilerin farklı türde uygulamalar (masaüstü, web, mobil, oyun, bulut) oluşturmasını kolaylaştırır. Platform, dil bağımsızlığı sağlar; yani bir uygulama C#, F#, VB.NET gibi farklı farklı dillerle yazılabilir.
+.NET, Microsoft'un geliştirdiği güçlü bir yazılım platformu olup, geliştiricilerin web'den mobile, masaüstünden bulut uygulamalarına kadar geniş bir yelpazede proje üretmesine imkan tanır.
 
 .NET, 2000 yılında Microsoft tarafından Windows uygulamaları geliştirmeyi kolaylaştırmak amacıyla duyuruldu. 2002’de ilk sürümü yayımlandı ve 2016’da açık kaynaklı ve platformlar arası çalışabilen .NET Core ile geliştirildi; günümüzde modern .NET sürümleriyle devam ediyor.
 
@@ -136,7 +136,7 @@ Console.WriteLine(Kare(5)); // 25
 
 ## 3. Backend Geliştirme Temelleri
 ### Backend
-Backend, bir web sitesinin veya uygulamanın kullanıcı görmediği, veri yönetimi, sunucu işlemleri ve iş mantığını yöneten kısmıdır; veritabanı sorgulamaları, kullanıcı doğrulama ve sunucu tarafı hesaplamalar burada gerçekleşir. Frontend ise kullanıcıların gördüğü ve etkileşimde bulunduğu kısımdır; tasarım, arayüz ve kullanıcı deneyimi (UI/UX) ile ilgilenir. Kısaca, frontend “görünen yüz” iken, backend “arkadaki motor” gibidir. 
+Backend'i bir iceberg'in su altında kalan kısmı gibi düşünebilirsiniz - görünmez ama asıl işi o yapar. Veri yönetimi, güvenlik kontrolleri ve tüm hesaplamalar burada gerçekleşir. Frontend ise kullanıcıların gördüğü ve etkileşimde bulunduğu kısımdır; tasarım, arayüz ve kullanıcı deneyimi (UI/UX) ile ilgilenir. Kısaca, frontend “görünen yüz” iken, backend “arkadaki motor” gibidir. 
 
 ### Web Sunucusu
 Web sunucusu, internet üzerinden kullanıcıların tarayıcıları aracılığıyla web sayfalarına erişmesini sağlayan yazılım ve donanım sistemidir; gelen istekleri alır, işler ve uygun web içeriğini (HTML, CSS, JS, görseller) kullanıcıya gönderir.
@@ -312,7 +312,7 @@ Kullanıcının hangi kaynaklara veya işlemlere erişebileceğini belirleme iş
 **OpenIddict:** ASP.NET Core projelerinde OAuth 2.0 ve OpenID Connect’i kolayca uygulamaya sokmak için kullanılan bir kütüphane.
 
 ### JWT
-JWT(JSON Web Token) bir RFC7519 endüstri standartıdır. JWT, kullanıcının doğrulanması, web servis güvenliği, bilgi güvenliği gibi birçok konuda kullanılabilir. Kişiye login sonrasında sunucudan gönderilen token ile erişim izni olan isteklere kolay ve güvenli bir şekilde erişmesini sağlar. 3 temel yapıdan oluşur:
+JWT(JSON Web Token) kullanıcının kimliğini kanıtlayan dijital bir kimlik kartı gibi. Güvenli ve taşınabilir. JWT, kullanıcının doğrulanması, web servis güvenliği, bilgi güvenliği gibi birçok konuda kullanılabilir. Kişiye login sonrasında sunucudan gönderilen token ile erişim izni olan isteklere kolay ve güvenli bir şekilde erişmesini sağlar. 3 temel yapıdan oluşur:
 - **Header:** Token tipini (JWT) ve kullanılan imzalama algoritmasını belirtir. `{"alg": "HS256", "typ": "JWT" }`
 - **Payload:** Kullanıcı bilgileri ve token ile taşınacak veriler burada yer alır. `{"sub": "1234567890", "name": "Devin", "role": "admin"}`
 - **Signature:** Header ve Payload, gizli bir anahtar ile imzalanır. Bu sayede tokenın değişmediği ve güvenli olduğu doğrulanabilir. `xxxxx.yyyyy.zzzzz`
@@ -433,7 +433,7 @@ ASP.NET Core’da logging, uygulamanın çalışma süresince oluşan olayların
 - **Singleton Pattern:** Bu tasarım örüntüsündeki amaç, bir class’tan sadece bir instance yaratılmasını sağlar. Yani herhangi bir class’tan bir instance yaratılmak istendiğinde, eğer daha önce yaratılmış bir instance yoksa yeni yaratılır. Daha önce yaratılmış ise var olan instance kullanılır.
 - **Factory Pattern:** Factory Design Pattern, nesne yaratma işlemi için bir arayüz tasarlanmasını gerektirir ve alt sınıfların nesne üretmesine olanak sağlar. Ayrıca, hangi sınıf nesnesinin oluşacağını da alt sınıflar kendileri belirler. Böylece nesne yaratma işlemini soyutlaştırır.
 ### Clean Code
-Temiz kod (Clean Code), okunabilir, anlaşılabilir, sürdürülebilir ve hataya açık olmayan kod yazma yaklaşımıdır. Gereksiz karmaşıklardan yoksun, sade, tekrar etmeyen bir yapıda olmalıdır. Değişken isimlerinin anlamlı olması gerekir. Başkasının veya gelecekte kendimiz koda baktığımızda zorlanmadan okuyup anlayabilmemiz için Clean Code şarttır.
+Temiz kod (Clean Code), okunabilir, anlaşılabilir, sürdürülebilir ve hataya açık olmayan kod yazma yaklaşımıdır. Gereksiz karmaşıklardan yoksun, sade, tekrar etmeyen bir yapıda olmalıdır. Değişken isimlerinin anlamlı olması gerekir. Başkasının veya gelecekte kendimiz koda baktığımızda "Bu ne ya?" dememek için kodumuzu temiz yazmamız gerekir.
 
 - Anlamlı isimler kullanmak
   ```powershell
