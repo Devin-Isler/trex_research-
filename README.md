@@ -1,9 +1,9 @@
 # Trex Research - .NET Backend Geliştirme
 
 ## 1. Modern Yazılım Geliştirme Pratikleri
-### Git nedir?
+### Git
 Git, dağıtık bir versiyon kontrol sistemidir. Yazılım projelerinde veya dosya yönetiminde yapılan değişiklikleri kaydedip, takip etip ve yöneterek versiyon kontrolünü kolaylaştırır.
-### GitHub nedir?
+### GitHub
 Github, Git versiyon kontrol sistemini kullanan projeler için bir bulut tabanlı platformdur. Git projeleri saklamak, paylaşmak ve ekip halinde yönetmek için kullanılan bir internet platformudur.
 ### Temel Git Komutları
 - `git init` → Yeni bir repo başlatır.
@@ -130,8 +130,62 @@ C#’ta: => expression-bodied members olarak kullanılır. Daha kısa ve okunabi
 int Kare(int x) => x * x;
 Console.WriteLine(Kare(5)); // 25
 ```
+## 3. Backend Geliştirme Temelleri
+### Backend
+Backend, bir web sitesinin veya uygulamanın kullanıcı görmediği, veri yönetimi, sunucu işlemleri ve iş mantığını yöneten kısmıdır; veritabanı sorgulamaları, kullanıcı doğrulama ve sunucu tarafı hesaplamalar burada gerçekleşir. Frontend ise kullanıcıların gördüğü ve etkileşimde bulunduğu kısımdır; tasarım, arayüz ve kullanıcı deneyimi (UI/UX) ile ilgilenir. Kısaca, frontend “görünen yüz” iken, backend “arkadaki motor” gibidir. 
 
+### Web Sunucusu
+Web sunucusu, internet üzerinden kullanıcıların tarayıcıları aracılığıyla web sayfalarına erişmesini sağlayan yazılım ve donanım sistemidir; gelen istekleri alır, işler ve uygun web içeriğini (HTML, CSS, JS, görseller) kullanıcıya gönderir.
+### API
+API (Application Programming Interface), farklı yazılım uygulamalarının birbirleriyle veri ve işlev paylaşmasını sağlayan arayüzdür; yani programların “konuşmasını” sağlar.
+Başlıca türleri:
+- **REST API:** HTTP protokolü üzerinden çalışır, genellikle JSON kullanır, web uygulamalarında yaygındır.
+- **SOAP API:** XML tabanlı, daha katı kuralları olan ve genellikle kurumsal sistemlerde kullanılan bir web servisi standardıdır.
+- **GraphQL API:** İstemcinin sadece ihtiyacı olan veriyi almasını sağlar, esnek sorgulama yapar.
+- **WebSocket API:** Gerçek zamanlı veri iletişimi için sürekli açık bağlantı kullanır, chat veya canlı bildirimlerde kullanılır.
 
+### HTTP
+HTTP (HyperText Transfer Protocol), web tarayıcıları ile sunucular arasındaki veri alışverişini sağlayan protokoldür. Web sayfaları, dosyalar ve API’ler HTTP üzerinden iletilir.
+
+- **GET:** Sunucudan veri almak için kullanılır. Örnek: `GET /users` → Tüm kullanıcıları getirir.
+- **POST:** Sunucuya yeni veri göndermek için kullanılır. Örnek: `POST /users` → Yeni kullanıcı oluşturur.
+- **PUT:** Sunucudaki mevcut veriyi güncellemek için kullanılır. Örnek: `PUT /users/1` → ID’si 1 olan kullanıcıyı günceller.
+- **DELETE:** Sunucudan veri silmek için kullanılır. Örnek: `DELETE /users/1` → ID’si 1 olan kullanıcıyı siler.
+
+### JSON
+JSON (JavaScript Object Notation), veri alışverişi için kullanılan hafif, okunabilir ve yazımı kolay bir formattır. Aslında bir veri temsil biçimidir; hem insanlar hem de makineler tarafından kolayca anlaşılabilir. Farklı diller arasında veri aktarmak ve veriyi saklamak için kullanılır. JSON, veriyi hiyerarşik olarak (nesne, dizi, değer) düzenleyip paylaşmayı sağlar.
+
+```powershell
+{
+  "id": 1,
+  "isim": "Devin İşler",
+  "yas": 20,
+  "email": "devinisler@hotmail.com",
+  "okul": "Boğaziçi University",
+  "adres": {
+    "sehir": "İstanbul",
+    "ilce": "Beşiktaş"
+  },
+  "hobiler": ["film izlemek", "yüzmek", "kitap okumak"]
+}
+```
+- ** Key-Value çifti:** "id" anahtarının değeri 1 integer'ı, "isim" anahtarının değeri "Devin İşler" string'i gibi.
+- ** Nesne:** Süslü parantezle({}) gösterilir. "adres" anahtarının değeri "sehir" ve "ilce"yi içeren bi nesne.
+- ** Dizi: ** Köşeli parantez ile ([]) gösterilir. Birden fazla veriyi depolar.
+  
+### REST vs SOAP vs GraphQL
+
+| Özellik | REST | SOAP | GraphQL |
+|---------|------|------|---------|
+| **Tanım** | Web üzerinde kaynaklara HTTP üzerinden erişim sağlayan mimari stil | XML tabanlı, kurallı ve güvenli web servisi protokolü | İstemcinin ihtiyacı olan veriyi sorgulayabildiği modern API dili |
+| **Tam Açılım** | Representational State Transfer | Simple Object Access Protocol | Graph Query Language |
+| **Protokol** | HTTP (GET, POST, PUT, DELETE) | HTTP, SMTP, TCP vb. | HTTP (genellikle POST) |
+| **Veri Formatı** | JSON, XML, YAML | XML (zorunlu) | JSON (isteğe bağlı) |
+| **Mimari** | Kaynak odaklı | Katı, standart kurallara bağlı | İstemci bazlı sorgu, tek endpoint |
+| **Durumsuzluk (Stateless)** | Evet | Hayır (genellikle stateful) | Evet |
+| **Avantajları** | Basit, hafif, yaygın | Güvenli, işlem garantili | Esnek, ihtiyaca göre veri çekilebilir |
+| **Dezavantajları** | Karmaşık ilişkilerde çoklu endpoint gerekebilir | Ağır ve karmaşık | Cache ve güvenlik ayarları daha karmaşık |
+| **Kullanım Alanı** | Web ve mobil API’leri | Kurumsal uygulamalar, bankacılık | Modern web ve mobil uygulamalar |
 
 
 
