@@ -173,9 +173,9 @@ JSON (JavaScript Object Notation), veri alışverişi için kullanılan hafif, o
   "hobiler": ["film izlemek", "yüzmek", "kitap okumak"]
 }
 ```
-- ** Key-Value çifti:** "id" anahtarının değeri 1 integer'ı, "isim" anahtarının değeri "Devin İşler" string'i gibi.
-- ** Nesne:** Süslü parantezle({}) gösterilir. "adres" anahtarının değeri "sehir" ve "ilce"yi içeren bi nesne.
-- ** Dizi: ** Köşeli parantez ile ([]) gösterilir. Birden fazla veriyi depolar.
+- **Key-Value çifti:** "id" anahtarının değeri 1 integer'ı, "isim" anahtarının değeri "Devin İşler" string'i gibi.
+- **Nesne:** Süslü parantezle({}) gösterilir. "adres" anahtarının değeri "sehir" ve "ilce"yi içeren bi nesne.
+- **Dizi:** Köşeli parantez ile ([]) gösterilir. Birden fazla veriyi depolar.
   
 ### REST vs SOAP vs GraphQL
 
@@ -338,7 +338,7 @@ ASP.NET Core uygulamalarında web güvenliği risklerine karşı alınabilecek �
 - **Model Validation (Model Doğrulama):** Kullanıcıdan gelen verilerin beklenen formatta olup olmadığını kontrol eder. Boş veya hatalı veri girişleri otomatik engellenir.
 - **Input Sanitization (Girdi Temizleme):** Kullanıcıdan gelen HTML/JS içeriğinin zararlı kod içermesini önler.
 - **Anti-Forgery Token (CSRF Koruması):** Formlara otomatik CSRF token ekleyerek CSRF saldırılarını engeller.
-- **Exception Handling & Logging: ** Kullanıcılara ham hata mesajı gösterilmemeli. UseExceptionHandler("/Home/Error") ile özel hata sayfası kullanılmalı.
+- **Exception Handling & Logging:** Kullanıcılara ham hata mesajı gösterilmemeli. UseExceptionHandler("/Home/Error") ile özel hata sayfası kullanılmalı.
 
 
 ---
@@ -352,16 +352,19 @@ Log seviyesi, uygulamanın hangi önemdeki bilgileri log dosyasına yazacağın�
 - INFO → Uygulamanın normal işleyişi hakkında genel bilgiler (başlatıldı, durduruldu, kullanıcı giriş yaptı vb.).
 - WARN → Beklenmedik ama uygulamayı durdurmayan durumlar (örn. cache miss, deprecated metod kullanımı).
 - ERROR → Uygulamanın düzgün çalışmasını engelleyen hatalar.
-- FATAL (veya CRITICAL) → ** Uygulamanın tamamen çökmesine sebep olan kritik hatalar.
+- FATAL (veya CRITICAL) → Uygulamanın tamamen çökmesine sebep olan kritik hatalar.
 
 ### ASP.NET Core'da Loglama
-ASP.NET Core’da logging, uygulamanın çalışma süresince oluşan olayların, hataların ve bilgilendirici mesajların kaydedilmesini sağlayan yerleşik bir altyapıdır. Bu altyapı, esnek ve genişletilebilir bir şekilde tasarlanmıştır. Log seviyelerini destekler. Yerleşik logging API vardır.  
-ASP.NET Core’da **global exception handling** (küresel hata yakalama), uygulama boyunca yakalanmayan tüm hataları merkezi bir noktada yakalayıp loglamak ve kullanıcıya kontrollü bir yanıt dönmek için kullanılır.  
-**UseExceptionHandler** ASP.NET Core’un hazır middleware’idir. Uygulama genelinde yakalanmayan hataları merkezi bir noktada yakalamak için kullanılır. Uygulamada bir hata oluşursa, akış kesilip bu hata hata pipeline'ına gönderilir, gerekli önlemler ve düzenlemeler burdan  yapılabilir.  
-**Iloger** ASP.NET Core’un yerleşik loglama mekanizmasıdır. Uygulamada gerçekleşen olayları log seviyesini belirleyerek kayıt altına alır.  
-İkisi beraber çalışarak hatayı yakalayıp kayıt altına alır.  
+ASP.NET Core’da logging, uygulamanın çalışma süresince oluşan olayların, hataların ve bilgilendirici mesajların kaydedilmesini sağlayan yerleşik bir altyapıdır. Bu altyapı, esnek ve genişletilebilir bir şekilde tasarlanmıştır. Log seviyelerini destekler. Yerleşik logging API vardır.
 
-ASP.NET Core’da hata yönetimi, uygulamadaki tüm hataları tek bir yerde yakalayarak hem loglamak hem de kullanıcıya güvenli bir mesaj göstermek için yapılır. Bunun için UseExceptionHandler() kullanılır; bu middleware, hata oluştuğunda isteği belirlenen bir endpoint’e yönlendirir. Bu endpoint içinde ILogger ile hatanın detayları kaydedilir ve kullanıcıya teknik detay içermeyen bir hata mesajı döner. Böylece uygulama çökmez ve hatalar izlenebilir, ve düzeltilmeye çalışılır.
+- ASP.NET Core’da **global exception handling** (küresel hata yakalama), uygulama boyunca yakalanmayan tüm hataları merkezi bir noktada yakalayıp loglamak ve kullanıcıya kontrollü bir yanıt dönmek için kullanılır.
+
+- **UseExceptionHandler** ASP.NET Core’un hazır middleware’idir. Uygulama genelinde yakalanmayan hataları merkezi bir noktada yakalamak için kullanılır. Uygulamada bir hata oluşursa, akış kesilip bu hata hata pipeline'ına gönderilir, gerekli önlemler ve düzenlemeler burdan  yapılabilir.
+
+- **Iloger** ASP.NET Core’un yerleşik loglama mekanizmasıdır. Uygulamada gerçekleşen olayları log seviyesini belirleyerek kayıt altına alır.  
+İkisi beraber çalışarak hatayı yakalayıp kayıt altına alır.
+
+- ASP.NET Core’da hata yönetimi, uygulamadaki tüm hataları tek bir yerde yakalayarak hem loglamak hem de kullanıcıya güvenli bir mesaj göstermek için yapılır. Bunun için UseExceptionHandler() kullanılır; bu middleware, hata oluştuğunda isteği belirlenen bir endpoint’e yönlendirir. Bu endpoint içinde ILogger ile hatanın detayları kaydedilir ve kullanıcıya teknik detay içermeyen bir hata mesajı döner. Böylece uygulama çökmez ve hatalar izlenebilir, ve düzeltilmeye çalışılır.
 
  ---
 
@@ -433,7 +436,7 @@ ASP.NET Core’da hata yönetimi, uygulamadaki tüm hataları tek bir yerde yaka
 Temiz kod (Clean Code), okunabilir, anlaşılabilir, sürdürülebilir ve hataya açık olmayan kod yazma yaklaşımıdır. Gereksiz karmaşıklardan yoksun, sade, tekrar etmeyen bir yapıda olmalıdır. Değişken isimlerinin anlamlı olması gerekir. Başkasının veya gelecekte kendimiz koda baktığımızda zorlanmadan okuyup anlayabilmemiz için Clean Code şarttır.
 
 - Anlamlı isimler kullanmak
-  ```
+  ```powershell
   // Kötü
   int d; // neyi temsil ediyor?  
 
@@ -441,7 +444,7 @@ Temiz kod (Clean Code), okunabilir, anlaşılabilir, sürdürülebilir ve hataya
   int daysSinceCreation;
   ```
 - Karışık taskleri farklı fonksiyonlara bölmek
-  ```
+  ```powershell
   // Kötü
   void process() {
   // veri çek
@@ -455,7 +458,7 @@ Temiz kod (Clean Code), okunabilir, anlaşılabilir, sürdürülebilir ve hataya
   void printData() { ... } // yazdır
   ```
 - Tek fonksiyon tek sorumluluk
-  ```
+  ```powershell
   class Invoice {
     void calculateTotal() { ... }   // Hesaplama
     void printInvoice() { ... }     // Yazdırma
@@ -465,7 +468,7 @@ Temiz kod (Clean Code), okunabilir, anlaşılabilir, sürdürülebilir ve hataya
 - Yorumları ne eksik ne fazla tutmak
   
 - Magic Number ve String’lerden Kaçının
-  ```
+  ```powershell
   // Kötü
   if(status == 3) { ... }
 
