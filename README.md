@@ -215,7 +215,7 @@ var app = builder.Build();
 
 // ⚠️ ÖNEMLİ: Middleware sırası çok kritik!
 
-// 1. Exception Handling - En üstte olmalı (tüm hataları yakalar)
+## 1. Exception Handling - En üstte olmalı (tüm hataları yakalar)
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -226,28 +226,28 @@ else
     app.UseHsts(); // HTTP Strict Transport Security
 }
 
-// 2. HTTPS Redirection - Güvenlik için erken olmalı
+## 2. HTTPS Redirection - Güvenlik için erken olmalı
 app.UseHttpsRedirection();
 
-// 3. Static Files - Basit dosya isteklerini erken yakalasın
+## 3. Static Files - Basit dosya isteklerini erken yakalasın
 app.UseStaticFiles();
 
-// 4. Routing - URL eşleştirme
+## 4. Routing - URL eşleştirme
 app.UseRouting();
 
-// 5. CORS - Cross-origin istekler için (eğer gerekiyorsa)
+## 5. CORS - Cross-origin istekler için (eğer gerekiyorsa)
 // app.UseCors();
 
-// 6. Authentication - Kullanıcı kimliği doğrulama
+## 6. Authentication - Kullanıcı kimliği doğrulama
 app.UseAuthentication();
 
-// 7. Authorization - Yetkilendirme (Authentication'dan SONRA)
+## 7. Authorization - Yetkilendirme (Authentication dan sonra)
 app.UseAuthorization();
 
-// 8. Custom Middleware (eğer varsa)
+## 8. Custom Middleware (eğer varsa)
 app.UseMiddleware<RequestLoggingMiddleware>();
 
-// 9. Endpoints - Son olarak controller'lara yönlendirme
+## 9. Endpoints - Son olarak controller'lara yönlendirme
 app.MapControllers();
 
 app.Run();
