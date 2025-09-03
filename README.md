@@ -170,7 +170,7 @@ JSON (JavaScript Object Notation), veri alışverişi için kullanılan hafif, o
     "sehir": "İstanbul",
     "ilce": "Beşiktaş"
   },
-  "hobiler": ["film izlemek", "yüzmek", "kitap okumak"]
+  "hobiler": ["film izlemek", "yüzmek", "satranç"]
 }
 ```
 - **Key-Value çifti:** "id" anahtarının değeri 1 integer'ı, "isim" anahtarının değeri "Devin İşler" string'i gibi.
