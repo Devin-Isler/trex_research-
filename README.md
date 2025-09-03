@@ -44,6 +44,7 @@ Yazılımcılar SDLC’de özellikle **kodlama, test ve bakım aşamalarında ak
 - **Scrum:**  Agile metodolojisinin en popüler çerçevelerinden biridir.
 - **Kanban:** İş akışını görselleştiren, sürekli akışı ön planda tutan bir metodolojidir.
 
+---
 
 ## 2. .NET Ekosistemi
 ### .NET nedir?
@@ -130,6 +131,9 @@ C#’ta: => expression-bodied members olarak kullanılır. Daha kısa ve okunabi
 int Kare(int x) => x * x;
 Console.WriteLine(Kare(5)); // 25
 ```
+
+---
+
 ## 3. Backend Geliştirme Temelleri
 ### Backend
 Backend, bir web sitesinin veya uygulamanın kullanıcı görmediği, veri yönetimi, sunucu işlemleri ve iş mantığını yöneten kısmıdır; veritabanı sorgulamaları, kullanıcı doğrulama ve sunucu tarafı hesaplamalar burada gerçekleşir. Frontend ise kullanıcıların gördüğü ve etkileşimde bulunduğu kısımdır; tasarım, arayüz ve kullanıcı deneyimi (UI/UX) ile ilgilenir. Kısaca, frontend “görünen yüz” iken, backend “arkadaki motor” gibidir. 
@@ -187,8 +191,295 @@ JSON (JavaScript Object Notation), veri alışverişi için kullanılan hafif, o
 | **Dezavantajları** | Karmaşık ilişkilerde çoklu endpoint gerekebilir | Ağır ve karmaşık | Cache ve güvenlik ayarları daha karmaşık |
 | **Kullanım Alanı** | Web ve mobil API’leri | Kurumsal uygulamalar, bankacılık | Modern web ve mobil uygulamalar |
 
+---
+
+## 4. ASP.NET
+ASP.NET, Microsoft tarafından geliştirilmiş, açık kaynak ve Windows ortamında çalışan bir web uygulama framework’üdür. Web Forms, MVC ve Web API gibi yapılar sunar ve hızlı geliştirme ile güçlü entegrasyon imkânı sağlar. ASP.NET Core ise modern, platformlar arası çalışabilen (.NET Core üzerinde) bir framework olup Windows, Linux ve macOS’u destekler. Modüler yapısı sayesinde sadece gerekli paketleri kullanır, performansı yüksektir ve bulut ile mikroservis mimarileri için uygundur. Özetle, ASP.NET eski ve Windows odaklı iken, ASP.NET Core modern, hafif, hızlı ve platformlar arası uyumlu bir çözüm sunar.
+### MVC
+Açılımı **Model View Controller** olan **MVC**, işleri oldukça kolaylaştıran bir mimaridir. Burada model kelimesi, veritabanından verilerin çekilmesine yardımcı olur. Bu sayede verileri bir yerden kontrol etme olanağı bulunur. View kelimesi ise, görünüm katmanıdır. Yani Html, JavaScript ve CSS gibi bazı kodların tutulduğu bölümdür. Son kelimesi olan Controller ise, model ve view arasında kalan katmandır ve iş akışını yönetir. MVC farklı amaçlara hizmet eden bileşenlerini birbirinden ayırarak, kodu daha rahat bir şekilde geliştirebilir ve test haline getirebilirsin.
+### Middleware
+Middleware, bir web uygulamasında gelen HTTP isteğinin uygulamaya ulaşmadan önce ve yanıt oluşturulurken uygulamadan çıkmadan önce ara katmanlarda işlenmesini sağlayan bir yazılım parçasıdır. Her middleware, isteği inceleyip değiştirebilir, ek işlemler yapabilir veya isteğin devam edip etmeyeceğine karar verebilir.  
+Middleware sırası işlem mantığına göre dikkatlice belirlenir: örneğin hata yakalama en üstte olmalı ki tüm zincirdeki hataları yakalayabilsin, authentication yetkilendirmeden önce gelmeli ki kullanıcı doğrulaması yapılabilsin, statik dosya middleware’i genellikle en başta olmalı ki basit dosya istekleri hızla işlenebilsin. Sıralama yanlış olursa middleware’lerin işlevleri doğru çalışmayabilir veya gereksiz yere performans kaybı oluşabilir.
+### Dependency Injection
+Dependency Injection, bir sınıfın ihtiyaç duyduğu bağımlılıkların (services, repository, logger vb.) sınıfın içinde kendisi tarafından oluşturulması yerine dışarıdan verilmesi prensibidir. Sınıflar sıkı sıkıya birbirine bağlı olmadıklarından test edilebilirliği yüksektir. Farklı implemantasyonlar kolaylıkla uygulanabilir.  
+```powershell
+// Servis
+public interface IMessage { void Send(string msg); }
+public class Email : IMessage { public void Send(string msg) => Console.WriteLine(msg); }
+
+// Kullanıcı sınıf
+public class Notification
+{
+    private IMessage _message;
+    public Notification(IMessage message) { _message = message; }
+    public void Notify(string msg) => _message.Send(msg);
+}
+
+// Kullanım
+var notification = new Notification(new Email());
+notification.Notify("Merhaba!");
+```
+Notification sınıfı mesaj gönderme işini kendi yaratmadığı bir IMessage nesnesi üzerinden yapıyor. Bu, DI ile bağımlılığı dışarıdan sağlamak demek.
+### Katmanlı Mimari
+Katmanlı Mimari (Layered Architecture) yazılımda en temel ve yaygın kullanılan mimarilerden biridir. Mantığı, uygulamanın sorumluluklarını farklı katmanlara ayırarak kodun daha düzenli, sürdürülebilir ve test edilebilir olmasını sağlamaktır.
+Katmanlar:
+- **Presentation Layer (Sunum Katmanı):** Kullanıcı ile etkileşimi sağlar. Web sayfası, API controller veya mobil uygulama arayüzü bu katmanda yer alır. İş mantığı içermez; yalnızca veriyi gösterir ve kullanıcıdan gelen veriyi toplar.
+- **Business Layer (İş Mantığı Katmanı):** Uygulamanın iş kurallarını uygular. Verilerin doğrulanması, hesaplamalar, iş süreçleri burada yapılır. Sunum ve veri erişim katmanlarından bağımsızdır.
+- **Data Access - Persistince Layer (Veri Erişim Katmanı):** Veritabanı veya başka veri kaynaklarına erişimi sağlar. CRUD (Create, Read, Update, Delete) işlemleri bu katmanda yapılır. Business katmanı bu katmana doğrudan bağımlı olur, fakat sunum katmanı dolaylı olarak erişir.  
+![Layered Architecture pattern](https://www.oreilly.com/content/wp-content/uploads/sites/2/2020/01/sapr_0104-0cf58347b8f994c7605d68eca5ef8ba4.png)
+
+### Clean Architecture
+Bu yaklaşımda, uygulamanın çekirdek iş mantığı dış bağımlılıklardan izole edilir ve katmanlar arasında tek yönlü bağımlılık kuralı uygulanır: iç katmanlar dış katmanlardan bağımsızdır.
+- **Domain (Core) Katmanı:** İş kurallarının ve temel mantığın bulunduğu katmandır. Entity ve Value Object gibi yapılar burada yer alır. Başka katmanlara bağımlılığı yoktur, en bağımsız katmandır.
+- **Application Katmanı:** Domain katmanını kullanarak iş süreçlerini (use case’leri) yönetir. Service, Use Case, Interface gibi yapılar içerir. Domain’e bağımlıdır, ama Infrastructure veya API’ye bağımlı değildir.
+- **Infrastructure Katmanı:** Veri tabanı, dosya sistemi, e-posta, üçüncü taraf servisler gibi dış bağımlılıkları yönetir. Application veya Domain katmanına alt seviyeden hizmet sağlar. Örneğin Repository implementasyonları burada bulunur.
+- **API (Presentation) Katmanı:** Kullanıcıya veya dış sistemlere açılan uç noktaları sağlar (Web API, UI, vb.). Application katmanındaki use case’leri çağırır. Infrastructure veya Domain’e doğrudan bağımlı değil, sadece Application üzerinden iletişim kurar.
+
+---
+
+## 5. Veritabanı ve ORM
+### SQL
+SQL(Structured Query Language) veritabanlarıyla iletişim kurmak için kullanılan standart bir dildir. SQL, ilişkisel veritabanlarında (Relational Databases) veri ekleme, silme, güncelleme, sorgulama ve yönetme işlemlerini yapmanızı sağlar.
+- Veri Sorgulama (SELECT)
+	- Veritabanındaki verileri filtreleyip, sıralayıp, gruplandırarak çekmenizi sağlar.
+	- Örnek: `SELECT * FROM ogrenciler WHERE yas > 18;`
+- Veri Ekleme (INSERT)
+	 - Yeni kayıtları tabloya ekler.
+	 - Örnek: `INSERT INTO ogrenciler (isim, yas) VALUES ('Ali', 20);`
+- Veri Güncelleme (UPDATE)
+	 - Mevcut kayıtları değiştirir.
+	 - Örnek: `UPDATE ogrenciler SET yas = 21 WHERE isim = 'Ali';`
+- Veri Silme (DELETE)
+	 - Kayıtları tablodan siler.
+	 - Örnek: `DELETE FROM ogrenciler WHERE yas < 18;`
+
+ ### İlişkisel vs İlişkisel Olmayan Veri Tabaları
+
+| Özellik | İlişkisel Veritabanı (RDBMS) | İlişkisel Olmayan Veritabanı (NoSQL) |
+|---------|-----------------------------|------------------------------------|
+| Veri Yapısı | Tablo (satır ve sütun) şeklinde, ilişkiler vardır | JSON, belge, anahtar-değer, grafik veya sütun tabanlı yapılar |
+| Şema (Schema) | Önceden tanımlanmış, sabit şema | Esnek şema, veriler farklı formatlarda olabilir |
+| Veri Bütünlüğü | ACID (Atomicity, Consistency, Isolation, Durability) kurallarına uyulur | BASE (Basically Available, Soft state, Eventually consistent) yaklaşımı |
+| Ölçeklenebilirlik | Dikey ölçeklenir (daha güçlü sunucu ile) | Yatay ölçeklenebilir (birden fazla sunucu ekleyerek) |
+| Sorgulama | SQL dili ile sorgulanır | Çoğu kendi sorgu dili veya API kullanır |
+| Kullanım Alanı | Bankacılık, muhasebe, insan kaynakları gibi veri bütünlüğünün önemli olduğu uygulamalar | Büyük veri, sosyal medya, gerçek zamanlı analiz, IoT gibi yüksek hacimli ve esnek veri gereken uygulamalar |
+| Örnek Sistemler | MySQL, PostgreSQL, Oracle, SQL Server | MongoDB, Cassandra, Redis, CouchDB |
+
+### ORM
+ORM(Object-Relational Mapping), nesne yönelimli programlama (OOP) ile ilişkisel veritabanları (RDBMS) arasındaki köprüdür. Veritabanı tablolarını C# sınıfları ile temsil ederek, SQL sorguları yazmadan veri işlemlerini gerçekleştirmeyi sağlar. Kodun okunabilirliğini arttırır.
+**Entity Framework Core** Microsoft tarafından geliştirilmiş bir ORM framework’üdür ve .NET uygulamaları için tasarlanmıştır. Veritabanı ile C# sınıfları arasında doğrudan ilişki kurar.
+**DbContext** Entity Framework Core’da veritabanı ile uygulama arasındaki ana köprüdür. Veritabanı oturumu gibi düşünülebilir. İçinde tabloların temsil edildiği DbSet’ler vardır ve bu sayede veritabanına veri eklenebilir, silinebilir veya güncellenebilir.
+
+### LINQ
+LINQ (Language Integrated Query), C# içine gömülü bir sorgulama dilidir ve koleksiyonlar, diziler veya veritabanları üzerinde SQL benzeri sorgular yapmayı sağlar.
+
+| LINQ İfadesi | Açıklama | Örnek | SQL Karşılığı |
+|--------------|----------|-------|---------------|
+| `Where` | Verileri filtreler | `students.Where(s => s.Age >= 18)` | `SELECT * FROM Students WHERE Age >= 18;` |
+| `Select` | Belirli kolonları seçer | `students.Select(s => s.Name)` | `SELECT Name FROM Students;` |
+| `OrderBy` / `OrderByDescending` | Verileri artan/azalan sırada sıralar | `students.OrderBy(s => s.Name)` | `SELECT * FROM Students ORDER BY Name ASC;` |
+| `First` / `FirstOrDefault` | Şarta uyan ilk elemanı alır | `students.FirstOrDefault(s => s.Age > 20)` | `SELECT TOP 1 * FROM Students WHERE Age > 20;` |
+| `Single` / `SingleOrDefault` | Tek bir elemanı alır (tek veya hiç) | `students.SingleOrDefault(s => s.Id == 1)` | `SELECT * FROM Students WHERE Id = 1;` |
+| `Any` / `All` | Koşulun varlığını veya tümünü kontrol eder | `students.Any(s => s.Age >= 18)` | `SELECT CASE WHEN EXISTS(SELECT * FROM Students WHERE Age >= 18) THEN 1 ELSE 0 END;` |
+| `Count` / `Sum` / `Max` / `Min` / `Average` | Sayısal işlemler yapar | `students.Count()` | `SELECT COUNT(*) FROM Students;` |
 
 
+### Code-First vs DataBase-First
+
+Entity Framework Core’da iki temel yaklaşım vardır: Code-First ve Database-First.
+
+| Özellik | Code-First | Database-First |
+|---------|------------|----------------|
+| Tanım | C# sınıflarından veritabanı oluşturulur | Var olan veritabanından C# sınıfları ve DbContext oluşturulur |
+| Başlangıç Noktası | Kod (Model sınıfları) | Veritabanı |
+| Avantaj | Kod üzerinden tam kontrol, migration desteği | Mevcut veritabanı ile hızlı entegrasyon |
+| Dezavantaj | Var olan veritabanı ile entegrasyon zor | Kod değişiklikleri veritabanına otomatik yansımaz |
+
+---
+
+## 6. Güvenlik ve Performans
+### Authentication
+Kullanıcının kim olduğunu doğrulama işlemidir. Kullanıcı adı - şifre, biyometrik doğrulama, OBP gibi.
+- **OpenID:** Kullanıcının kimliğini doğrulamak için standart bir protokol.    	
+	- **Örnek:** Google hesabımla giriş yapmak.  
+
+### Authorization
+Kullanıcının hangi kaynaklara veya işlemlere erişebileceğini belirleme işlemidir. Admin mi user mı, hangi belgeleri okuyabilir, yazabilir gibi.  
+- **OAuth:** Kullanıcının parolasını paylaşmadan, üçüncü taraf uygulamalara belirli kaynaklara erişim izni vermesini sağlar.    
+	- **Örnek:** Bir kullanıcı, “Uygulama X’in Gmail mesajlarıma erişmesini istiyorum” dediğinde OAuth kullanılır.  
+- **OAuth 2.0:** OAuth'un en güncel ve yaygın sürümü.  
+
+**OpenIddict:** ASP.NET Core projelerinde OAuth 2.0 ve OpenID Connect’i kolayca uygulamaya sokmak için kullanılan bir kütüphane.
+
+### JWT
+JWT(JSON Web Token) bir RFC7519 endüstri standartıdır. JWT, kullanıcının doğrulanması, web servis güvenliği, bilgi güvenliği gibi birçok konuda kullanılabilir. Kişiye login sonrasında sunucudan gönderilen token ile erişim izni olan isteklere kolay ve güvenli bir şekilde erişmesini sağlar. 3 temel yapıdan oluşur:
+- **Header:** Token tipini (JWT) ve kullanılan imzalama algoritmasını belirtir. `{"alg": "HS256", "typ": "JWT" }`
+- **Payload:** Kullanıcı bilgileri ve token ile taşınacak veriler burada yer alır. `{"sub": "1234567890", "name": "Devin", "role": "admin"}`
+- **Signature:** Header ve Payload, gizli bir anahtar ile imzalanır. Bu sayede tokenın değişmediği ve güvenli olduğu doğrulanabilir. `xxxxx.yyyyy.zzzzz`
+- 
+### Performans Artırımı
+- **AsNoTracking:** Entity Framework Core’da veriyi sadece okumak için çekiyorsanız AsNoTracking() kullanmak, EF’in değişiklik takibi yapmasını engeller. Bu sayede bellekte ve CPU’da daha az yük olur, sorgular çok daha hızlı çalışır.
+- **Caching:** Sık kullanılan verileri veritabanından sürekli çekmek yerine, bellek veya dağıtık cache’e almak performansı artırır.
+-**IAsyncEnumerable** 	Büyük veri setlerini asenkron ve streaming şeklinde çekmek için kullanılır. Tüm veriyi belleğe yüklemek yerine, veriler parça parça çekilir, bu bellek kullanımını azaltır ve performansı artırır.
+
+### OWASP
+- **1. Broken Access Control (Erişim Kontrolü Hataları):** Erişim kontrolü hataları, kullanıcıların yalnızca yetkili oldukları verilere ve işlemlere erişmesini sağlayan mekanizmaların yetersiz olmasından kaynaklanır. Bu durum, kullanıcıların başkalarının verilerine erişmesine veya kritik işlemleri gerçekleştirmesine olanak tanır. 
+- **2. Cryptographic Failures (Kriptografik Hatalar):** Şifreleme yöntemlerinin zayıflıklarından kaynaklanır. 
+- **3. Injection (Enjeksiyon):** Enjeksiyon saldırıları, kötü niyetli verilerin uygulama tarafından beklenmeyen şekilde işlenmesine neden olur. **SQL enjeksiyonu**, saldırganların veritabanı sorgularını manipüle ederek veri sızdırmasına veya değiştirmesine olanak tanır.
+- **4. Insecure Design (Güvensiz Tasarım):** Güvensiz tasarım, uygulamanın mimarisinde veya işleyişinde güvenlik açıklarına yol açabilecek hatalı kararlar alınması durumudur. 
+- **5. Security Misconfiguration (Güvenlik Yanlış Yapılandırması):** Yanlış yapılandırılmış güvenlik ayarları, sistemlerin ve uygulamaların yanlış yapılandırılmasından kaynaklanan güvenlik açıklarını ifade eder.
+- **6. Vulnerable and Outdated Components (Zayıf ve Güncel Olmayan Bileşenler):** Eski bilgisayar programları bilinen güvenlik açıklarına sahip olduğundan sadırganların açık hedefi haline gelir.
+- **7. Identification and Authentication Failures (Kimlik Doğrulama ve Tanımlama Hataları):** Kimlik doğrulama ve tanımlama hataları, kullanıcıların kimliklerinin doğru bir şekilde doğrulanamaması veya yetkilendirilmemesi durumudur. Broken Authentication gibi kimlik doğrulama ve oturum yönetimindeki hatalar sebep olur.
+- **8. Software and Data Integrity Failures (Yazılım ve Veri Bütünlüğü Hataları):** Bu kategori, yazılım güncellemeleri, kritik veriler ve sürekli entegrasyon/sürekli teslimat (CI/CD) süreçlerinde bütünlük kontrollerinin eksik olmasından kaynaklanan riskleri kapsar. 
+- **9. Security Logging and Monitoring Failures (Güvenlik Günlüğü ve İzleme Hataları):** Güvenlik günlüğü ve izleme hataları, güvenlik olaylarının yeterince kaydedilmemesi veya izlenmemesi durumudur. Bu, saldırıların tespit edilmesini ve yanıt verilmesini zorlaştırır. 
+- **10. Server-Side Request Forgery (SSRF):** Server-Side Request Forgery (SSRF), bir saldırganın, sunucunun dış kaynaklara istek göndermesini sağlayarak, iç ağlara veya sistemlere erişim elde etmesine olanak tanır.  
+
+ASP.NET Core uygulamalarında web güvenliği risklerine karşı alınabilecek önlemler şunlardır:
+- **Model Validation (Model Doğrulama):** Kullanıcıdan gelen verilerin beklenen formatta olup olmadığını kontrol eder. Boş veya hatalı veri girişleri otomatik engellenir.
+- **Input Sanitization (Girdi Temizleme):** Kullanıcıdan gelen HTML/JS içeriğinin zararlı kod içermesini önler.
+- **Anti-Forgery Token (CSRF Koruması):** Formlara otomatik CSRF token ekleyerek CSRF saldırılarını engeller.
+- **Exception Handling & Logging: ** Kullanıcılara ham hata mesajı gösterilmemeli. UseExceptionHandler("/Home/Error") ile özel hata sayfası kullanılmalı.
 
 
+---
 
+## 7. Logging ve Hata Yönetimi
+### Loglama
+Loglama, bir yazılım uygulamasında veya sistemde çalışma sırasında gerçekleşen olayların, hataların, uyarıların ve genel bilgilerin kaydedilmesi işlemidir. Diğer bir deyişle loglama, programın "günlük tutmasıdır".  
+Log seviyesi, uygulamanın hangi önemdeki bilgileri log dosyasına yazacağını belirten bir derecelendirmedir. 
+- TRACE → En ayrıntılı seviye, uygulamanın adım adım neler yaptığını gösterir. (Genelde geliştirme aşamasında kullanılır.)
+- DEBUG → Hata ayıklama için ayrıntılı bilgiler içerir.
+- INFO → Uygulamanın normal işleyişi hakkında genel bilgiler (başlatıldı, durduruldu, kullanıcı giriş yaptı vb.).
+- WARN → Beklenmedik ama uygulamayı durdurmayan durumlar (örn. cache miss, deprecated metod kullanımı).
+- ERROR → Uygulamanın düzgün çalışmasını engelleyen hatalar.
+- FATAL (veya CRITICAL) → ** Uygulamanın tamamen çökmesine sebep olan kritik hatalar.
+
+### ASP.NET Core'da Loglama
+ASP.NET Core’da logging, uygulamanın çalışma süresince oluşan olayların, hataların ve bilgilendirici mesajların kaydedilmesini sağlayan yerleşik bir altyapıdır. Bu altyapı, esnek ve genişletilebilir bir şekilde tasarlanmıştır. Log seviyelerini destekler. Yerleşik logging API vardır.  
+ASP.NET Core’da **global exception handling** (küresel hata yakalama), uygulama boyunca yakalanmayan tüm hataları merkezi bir noktada yakalayıp loglamak ve kullanıcıya kontrollü bir yanıt dönmek için kullanılır.  
+**UseExceptionHandler** ASP.NET Core’un hazır middleware’idir. Uygulama genelinde yakalanmayan hataları merkezi bir noktada yakalamak için kullanılır. Uygulamada bir hata oluşursa, akış kesilip bu hata hata pipeline'ına gönderilir, gerekli önlemler ve düzenlemeler burdan  yapılabilir.  
+**Iloger** ASP.NET Core’un yerleşik loglama mekanizmasıdır. Uygulamada gerçekleşen olayları log seviyesini belirleyerek kayıt altına alır.  
+İkisi beraber çalışarak hatayı yakalayıp kayıt altına alır.  
+
+ASP.NET Core’da hata yönetimi, uygulamadaki tüm hataları tek bir yerde yakalayarak hem loglamak hem de kullanıcıya güvenli bir mesaj göstermek için yapılır. Bunun için UseExceptionHandler() kullanılır; bu middleware, hata oluştuğunda isteği belirlenen bir endpoint’e yönlendirir. Bu endpoint içinde ILogger ile hatanın detayları kaydedilir ve kullanıcıya teknik detay içermeyen bir hata mesajı döner. Böylece uygulama çökmez ve hatalar izlenebilir, ve düzeltilmeye çalışılır.
+
+ ---
+
+##  8. Yazılım Geliştirme Prensipleri
+
+### SOLID prensibi
+- ***S*ingle Responsibility Principle (SRP) - Tek Sorumluluk Prensibi:** Bir sınıfın yalnızca bir tek sorumluluğu olmalıdır.
+  ```powershell
+  class InvoicePrinter {
+    void printInvoice(Invoice invoice) { ... }
+  }
+
+  class InvoiceSaver {
+  	void saveInvoice(Invoice invoice) { ... }
+  }
+  ```
+  Burada Invoice sınıfı yalnızca fatura ile ilgilenir, yazdırma ve kaydetme işleri ayrı sınıflarda.
+- ***O*pen/Closed Principle (OCP) - Açık/Kapalı Prensibi:** Yazılım varlıklarının (sınıflar, modüller, fonksiyonlar vb.) genişletmeye açık, ancak değişime kapalı olması gerektiğini belirtir.
+   ```powershell
+   interface Shape {
+    double area();
+  }
+
+  class Circle implements Shape {
+    double radius;
+    public double area() { return Math.PI * radius * radius; }
+  }
+
+  class Rectangle implements Shape {
+    double width, height;
+    public double area() { return width * height; }
+  }
+  ```
+
+- ***L*iskov Substitution Principle (LSP) - Liskov Yerine Geçme Prensibi:** Türetilmiş sınıfların, temel sınıfların yerine kullanılabilmesi gerektiğini belirtir.
+   ```powershell
+  class Bird { void fly() { ... } }
+  class Duck extends Bird { void fly() { ... } }
+  ```
+   Bird bekleyen yerde Duck kullanılabilir. Ama Ostrich gibi uçamayan bir kuş için bu tasarım hatalı olur.
+   Yeni şekil eklemek için mevcut kodu değiştirmeye gerek yok, sadece Shape implement eden yeni sınıf eklenir.
+- ***I*nterface Segregation Principle (ISP) - Arayüz Ayırma Prensibi:** Sınıflar, kullanmadıkları metotları içeren büyük arayüzlere bağlı kalmamalı.
+   ```powershell
+  interface Printer { void print(); }
+  interface Scanner { void scan(); }
+
+  class MultiFunctionPrinter implements Printer, Scanner { ... }
+  ```
+   Yazıcı sadece yazdırma işlevi kullanıyorsa Scanner’a bağlı kalmaz.
+- ***D*ependency Inversion Principle (DIP) - Bağımlılıkların Tersine Çevrilmesi Prensibi:** Üst seviye modüllerin, alt seviye modüllere bağımlı olmaması gerektiğini belirtir. Bunun yerine, her iki tür modül de soyutlamalara bağımlı olmalıdır.
+   ```powershell
+  interface Database { void save(String data); }
+
+  class MySQLDatabase implements Database {
+     public void save(String data) { ... }
+  }
+
+  class UserService {
+    private Database db;
+    UserService(Database db) { this.db = db; }
+    void saveUser(String name) { db.save(name); }
+  }
+  ```
+   UserService, doğrudan MySQLDatabase’e bağlı değil; Database interface’i üzerinden çalışıyor.
+### Design Patterns
+- **Singleton Pattern:** Bu tasarım örüntüsündeki amaç, bir class’tan sadece bir instance yaratılmasını sağlar. Yani herhangi bir class’tan bir instance yaratılmak istendiğinde, eğer daha önce yaratılmış bir instance yoksa yeni yaratılır. Daha önce yaratılmış ise var olan instance kullanılır.
+- **Factory Pattern:** Factory Design Pattern, nesne yaratma işlemi için bir arayüz tasarlanmasını gerektirir ve alt sınıfların nesne üretmesine olanak sağlar. Ayrıca, hangi sınıf nesnesinin oluşacağını da alt sınıflar kendileri belirler. Böylece nesne yaratma işlemini soyutlaştırır.
+### Clean Code
+Temiz kod (Clean Code), okunabilir, anlaşılabilir, sürdürülebilir ve hataya açık olmayan kod yazma yaklaşımıdır. Gereksiz karmaşıklardan yoksun, sade, tekrar etmeyen bir yapıda olmalıdır. Değişken isimlerinin anlamlı olması gerekir. Başkasının veya gelecekte kendimiz koda baktığımızda zorlanmadan okuyup anlayabilmemiz için Clean Code şarttır.
+
+- Anlamlı isimler kullanmak
+  ```
+  // Kötü
+  int d; // neyi temsil ediyor?  
+
+  // İyi
+  int daysSinceCreation;
+  ```
+- Karışık taskleri farklı fonksiyonlara bölmek
+  ```
+  // Kötü
+  void process() {
+  // veri çek
+  // filtrele
+  // yazdır
+  }
+ 
+  // İyi
+  void fetchData() { ... } // veri çek
+  void filterData() { ... } // filtrele
+  void printData() { ... } // yazdır
+  ```
+- Tek fonksiyon tek sorumluluk
+  ```
+  class Invoice {
+    void calculateTotal() { ... }   // Hesaplama
+    void printInvoice() { ... }     // Yazdırma
+    void saveInvoice() { ... }      // Kaydetme
+   }
+  ```
+- Yorumları ne eksik ne fazla tutmak
+  
+- Magic Number ve String’lerden Kaçının
+  ```
+  // Kötü
+  if(status == 3) { ... }
+
+  // İyi
+  final int STATUS_APPROVED = 3;
+  if(status == STATUS_APPROVED) { ... }
+  ```
+### Yazılım Mimari Desenleri
+
+ Mimari | Kısa Açıklama | Avantajları | Dezavantajları | Kullanım Senaryosu |
+|--------|---------------|------------|----------------|------------------|
+| **Layered (Katmanlı)** | İş mantığı, veri erişimi ve sunum katmanlarına ayrılır | Basit ve anlaşılır | Büyük projelerde bağımlılıklar karmaşık olabilir | Küçük/orta ölçekli uygulamalar |
+| **Clean Architecture** | Bağımlılıklar içten dışa doğru yönlendirilir | Test edilebilir, sürdürülebilir | Karmaşık | Orta/uzun vadeli projeler |
+| **Microservices** | Uygulama küçük bağımsız servisler olarak bölünür | Ölçeklenebilir, bağımsız dağıtım | Dağıtık sistem karmaşıklığı | Büyük, ölçeklenebilir uygulamalar |
+| **Event-Driven** | Servisler olaylar üzerinden iletişim kurar | Gevşek bağlı, esnek | Debug zor | Gerçek zamanlı sistemler |
+| **Hexagonal (Ports & Adapters)** | İş mantığı merkezde, giriş/çıkış adaptörlerle bağlanır | İş mantığı bağımsız, test kolaylığı | Öğrenme eğrisi | Test ve değişime önem verilen projeler |
+---
